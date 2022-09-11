@@ -48,3 +48,23 @@
         },
     });
 ```
+
+#### 3. Create Slice
+
+- `chat-application\src\features\auth\authSlice.js`
+
+```sh
+    import { createSlice } from "@reduxjs/toolkit";
+
+    const initialState = {};
+
+    const authSlice = createSlice({
+        name: "auth",
+        initialState,
+        reducers: {},
+    });
+
+    export const {} = authSlice.actions;
+    export default authSlice.reducer;
+
+```
