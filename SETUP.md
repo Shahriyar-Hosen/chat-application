@@ -34,3 +34,37 @@
         getDefaultMiddlewares().concat(apiSlice.middleware),
     });
 ```
+
+#### 3. Create API
+
+- `chat-application\src\features\auth\authApi.js`
+
+```sh
+    import { apiSlice } from "../api/apiSlice";
+
+    export const authApi = apiSlice.injectEndpoints({
+        endpoints: (builder) => {
+            // endpoints here
+        },
+    });
+```
+
+#### 3. Create Slice
+
+- `chat-application\src\features\auth\authSlice.js`
+
+```sh
+    import { createSlice } from "@reduxjs/toolkit";
+
+    const initialState = {};
+
+    const authSlice = createSlice({
+        name: "auth",
+        initialState,
+        reducers: {},
+    });
+
+    export const {} = authSlice.actions;
+    export default authSlice.reducer;
+
+```
