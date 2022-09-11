@@ -34,3 +34,17 @@
         getDefaultMiddlewares().concat(apiSlice.middleware),
     });
 ```
+
+#### 3. Create API
+
+- `chat-application\src\features\auth\authApi.js`
+
+```sh
+    import { apiSlice } from "../api/apiSlice";
+
+    export const authApi = apiSlice.injectEndpoints({
+        endpoints: (builder) => {
+            // endpoints here
+        },
+    });
+```
