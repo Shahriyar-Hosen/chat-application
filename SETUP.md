@@ -15,6 +15,7 @@
             baseUrl: "http://localhost:9000",
         }),
         endpoints: (builder) => ({
-    }),
-});
+
+        }),
+    });
 ```
