@@ -1,4 +1,5 @@
 # Chat Application with RTK Query - Project Plan
+<br />
 
 ## Requirement Analysis
 
