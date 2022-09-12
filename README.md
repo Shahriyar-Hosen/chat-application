@@ -44,9 +44,9 @@
     import { apiSlice } from "../api/apiSlice";
 
     export const authApi = apiSlice.injectEndpoints({
-        endpoints: (builder) => {
+        endpoints: (builder) => ({
             // endpoints here
-        },
+        }),
     });
 ```
 
@@ -93,12 +93,11 @@
 
 ```
 
-#### 6. Create Register & Login API on Query Started function
+#### 6. On Query Started function in Create Register & Login API
 
 - API URL এ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। ==> This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.
 
-- This function should be used after the query ==> এই ফাংশনটি কুয়েরি এরপরে ব্যবহার করতে হবে 
-
+- This function should be used after the query ==> এই ফাংশনটি কুয়েরি এরপরে ব্যবহার করতে হবে
 
 ```sh
     async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -123,4 +122,73 @@
         }
     },
 
+```
+
+#### Auth hooks
+
+hooks useAuth
+
+```sh
+    import { useSelector } from "react-redux";
+
+    const useAuth = () => {
+    const auth = useSelector((state) => state.auth);
+
+    if (auth?.accessToken && auth?.user) {
+        return auth;
+    } else {
+        return false;
+    }
+    };
+
+    export default useAuth;
+
+```
+
+#### Private & Public Route
+
+**Private Component**
+
+```sh
+    import React from "react";
+    import { Navigate } from "react-router-dom";
+    import useAuth from "../hooks/useAuth";
+
+    const PrivateRoute = ({ children }) => {
+    const isLoggedIn = useAuth();
+
+    return isLoggedIn ? children : <Navigate to="/" />;
+    };
+
+    export default PrivateRoute;
+```
+
+**Public Component**
+
+```sh
+    import React from "react";
+    import { Navigate } from "react-router-dom";
+    import useAuth from "../hooks/useAuth";
+
+    const PublicRoute = ({ children }) => {
+    const isLoggedIn = useAuth();
+
+    return !isLoggedIn ? children : <Navigate to="/inbox" />;
+    };
+
+    export default PublicRoute;
+```
+
+#### Conversation Api Add Pagination & Latest / Revers Conversation
+
+```sh
+    getConversations: builder.query({
+        
+        // filter by email ==> participants_like=${email}
+        // Latest / Revers Conversation ==> _sort=timestamp&_order=desc
+        // Pagination ==> _page=1&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}
+
+        query: (email) =>
+            `/conversations?participants_like=${email}&_sort=timestamp&_order=desc&_page=1&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}`,
+    }),
 ```

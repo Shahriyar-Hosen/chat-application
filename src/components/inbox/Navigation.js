@@ -11,6 +11,7 @@ const Navigation = () => {
     dispatch(userLoggedOut());
     localStorage.clear();
   };
+  
   return (
     <nav className="border-general sticky top-0 z-40 border-b bg-violet-700 transition-colors">
       <div className="max-w-7xl mx-auto">
