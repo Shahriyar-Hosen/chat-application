@@ -38,27 +38,27 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+    
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+          dispatch(
+            userLoggedIn({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+        } catch (err) {
+          // do nothing
+        }
+      },
     }),
   }),
-  async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-    try {
-      const result = await queryFulfilled;
-
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          accessToken: result.data.accessToken,
-          user: result.data.user,
-        })
-      );
-      dispatch(
-        userLoggedIn({
-          accessToken: result.data.accessToken,
-          user: result.data.user,
-        })
-      );
-    } catch (err) {
-      // do nothing
-    }
-  },
 });
