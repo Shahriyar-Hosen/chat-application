@@ -95,9 +95,7 @@
 
 #### 6. Create Register & Login API on Query Started function
 
-- `API URL এ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। `
-
-`This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.`
+- API URL এ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। ==> This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.
 
 - This function should be used after the query ==> এই ফাংশনটি কুয়েরি এরপরে ব্যবহার করতে হবে 
 
