@@ -14,6 +14,7 @@
         baseQuery: fetchBaseQuery({
             baseUrl: "http://localhost:9000",
         }),
+        tagTypes: [],
         endpoints: (builder) => ({
 
         }),
@@ -49,7 +50,7 @@
     });
 ```
 
-#### 3. Create Slice
+#### 4. Create Slice
 
 - `chat-application\src\features\auth\authSlice.js`
 
@@ -66,5 +67,59 @@
 
     export const {} = authSlice.actions;
     export default authSlice.reducer;
+
+```
+
+#### 5. Create Register & Login API
+
+```sh
+    endpoints: (builder) => ({
+        register: builder.mutation({
+            query: (data) => ({
+                url: "/register",
+                method: "POST",
+                body: data,
+            }),
+        }),
+
+        login: builder.mutation({
+            query: (data) => ({
+                url: "/login",
+                method: "POST",
+                body: data,
+            }),
+        }),
+    }),
+
+```
+
+#### 6. Create Register & Login API on Query Started function
+
+- `API URLএ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। `
+
+- `This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.`
+
+```sh
+    async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+          dispatch(
+            userLoggedIn({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+        } catch (err) {
+          // do nothing
+        }
+    },
 
 ```
