@@ -1,6 +1,6 @@
-# Chat Application with RTK Query - Project RTK Query Plan & setup
+# Chat Application with RTK Query - Project RTK Query Plan & Setup Notes ⚜
 
-## RTK Query Configuration ⚜ ⬇⬇⬇
+## RTK Query Configuration⬇⬇⬇
 
 ### API Slice creation & Store configuration
 
@@ -48,6 +48,8 @@
             // endpoints here
         }),
     });
+    
+    export const {  } = authApi;
 ```
 
 #### 4. Create Slice
@@ -183,7 +185,7 @@ hooks useAuth
 
 ```sh
     getConversations: builder.query({
-        
+
         // filter by email ==> participants_like=${email}
         // Latest / Revers Conversation ==> _sort=timestamp&_order=desc
         // Pagination ==> _page=1&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}
