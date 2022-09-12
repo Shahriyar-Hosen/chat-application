@@ -1,35 +1,128 @@
-# Chat Application with RTK Query - Project Plan
-<br />
+# Chat Application with RTK Query - Project RTK Query Plan & setup
 
-## Requirement Analysis
+## RTK Query Configuration ⚜ ⬇⬇⬇
 
-1. user can register. after registering, user will be automatically logged in, we will store login info to localStorage (for login persistance) and redirected to inbox page
+### API Slice creation & Store configuration
 
-2. user can login and after login we will save the login information in localStorage (for login persistance) and redirect user to inbox
+#### 1. Create Api Slice -
 
-3. load sidebar messages from conversation API and implement load more feature
+```sh
+    import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-4. load specific conversation messages when user clicks on it and implement load more feature
+    export const apiSlice = createApi({
+        reducerPath: "api",
+        baseQuery: fetchBaseQuery({
+            baseUrl: "http://localhost:9000",
+        }),
+        tagTypes: [],
+        endpoints: (builder) => ({
 
-5. when user sends message,
+        }),
+    });
+```
 
-   - if conversation id is present, update conversation table and also inserts into messages table
-   - if conversation id is missing, get conversation id using filter
-   - \_ if conversation id exists, then update that conversation and add to messages table
-   - \_ if conversation id is missing, insert that conversation and add to messages table
+#### 2. Store configuration
 
-6. sidebar conversation list scroll - sort by latest first and when user loads more, bring previous "10 conversations sorted by latest first" and pushed into the conversations array
+```sh
+    import { configureStore } from "@reduxjs/toolkit";
+    import { apiSlice } from "../features/api/apiSlice";
 
-7. messages list scroll - bring "10 latest messages per request sorted by oldest first". when user loads more, "bring previous 10 messages sorted again by oldest first" and unshift into the array
+    export const store = configureStore({
+    reducer: {
+        [apiSlice.reducerPath]: apiSlice.reducer,
+    },
+    middleware: (getDefaultMiddlewares) =>
+        getDefaultMiddlewares().concat(apiSlice.middleware),
+    });
+```
 
-## Required APIs
+#### 3. Create API
 
-1. register
-2. login
-3. get list of users other than requesting user
-4. update conversation
-5. insert conversation
-6. find conversation
-7. list conversation
-8. list messages by conversation id
-9. send message (insert messages into messages table)
+- `chat-application\src\features\auth\authApi.js`
+
+```sh
+    import { apiSlice } from "../api/apiSlice";
+
+    export const authApi = apiSlice.injectEndpoints({
+        endpoints: (builder) => {
+            // endpoints here
+        },
+    });
+```
+
+#### 4. Create Slice
+
+- `chat-application\src\features\auth\authSlice.js`
+
+```sh
+    import { createSlice } from "@reduxjs/toolkit";
+
+    const initialState = {};
+
+    const authSlice = createSlice({
+        name: "auth",
+        initialState,
+        reducers: {},
+    });
+
+    export const {} = authSlice.actions;
+    export default authSlice.reducer;
+
+```
+
+#### 5. Create Register & Login API
+
+```sh
+    endpoints: (builder) => ({
+        register: builder.mutation({
+            query: (data) => ({
+                url: "/register",
+                method: "POST",
+                body: data,
+            }),
+        }),
+
+        login: builder.mutation({
+            query: (data) => ({
+                url: "/login",
+                method: "POST",
+                body: data,
+            }),
+        }),
+    }),
+
+```
+
+#### 6. Create Register & Login API on Query Started function
+
+- `API URL এ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। `
+
+`This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.`
+
+- This function should be used after the query ==> এই ফাংশনটি কুয়েরি এরপরে ব্যবহার করতে হবে 
+
+
+```sh
+    async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+          dispatch(
+            userLoggedIn({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+        } catch (err) {
+          // do nothing
+        }
+    },
+
+```
