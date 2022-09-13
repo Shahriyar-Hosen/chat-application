@@ -31,5 +31,5 @@ export const {
   useGetConversationsQuery,
   useGetConversationQuery,
   useAddConversationMutation,
-  useEditConversationMutation
+  useEditConversationMutation,
 } = conversationApi;
