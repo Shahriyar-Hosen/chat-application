@@ -23,15 +23,19 @@ const ChatIItems = () => {
 
   if (isLoading) {
     content = <li className="m-2 text-center">Loading...</li>;
+
   } else if (!isLoading && isError) {
     content = (
       <li className="m-2 text-center">
         <Error message={error?.data} />
       </li>
+
     );
   } else if (!isLoading && !isError && conversations?.length === 0) {
     content = <li className="m-2 text-center">No conversations found!</li>;
+
   } else if (!isLoading && !isError && conversations?.length > 0) {
+    
     content = conversations.map((conversation) => {
       const { id, message, timestamp } = conversation;
       const { email } = user || {};
@@ -39,7 +43,7 @@ const ChatIItems = () => {
         conversation?.users,
         email
       );
-
+      
       return (
         <li key={id}>
           <Link to={`/inbox/${id}`}>
