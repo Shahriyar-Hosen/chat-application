@@ -1,10 +1,8 @@
 # Chat Application with RTK Query - Project RTK Query Plan & Setup Notes ⚜
 
-## RTK Query Configuration⬇⬇⬇
+## RTK Query Configuration API Slice creation & Store configuration ⬇⬇⬇
 
-### API Slice creation & Store configuration
-
-#### 1. Create Api Slice -
+### 1. Create Api Slice -
 
 ```sh
     import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -21,7 +19,7 @@
     });
 ```
 
-#### 2. Store configuration
+### 2. Store configuration
 
 ```sh
     import { configureStore } from "@reduxjs/toolkit";
@@ -36,7 +34,7 @@
     });
 ```
 
-#### 3. Create API
+### 3. Create API
 
 - `chat-application\src\features\auth\authApi.js`
 
@@ -48,11 +46,11 @@
             // endpoints here
         }),
     });
-    
+
     export const {  } = authApi;
 ```
 
-#### 4. Create Slice
+### 4. Create Slice
 
 - `chat-application\src\features\auth\authSlice.js`
 
@@ -72,7 +70,7 @@
 
 ```
 
-#### 5. Create Register & Login API
+### 5. Create Register & Login API
 
 ```sh
     endpoints: (builder) => ({
@@ -95,7 +93,9 @@
 
 ```
 
-#### 6. On Query Started function in Create Register & Login API
+## Project Plan & Setup Notes ⬇⬇⬇
+
+### 6. On Query Started function in Create Register & Login API
 
 - API URL এ হিট করার সাথে সাথে এই ফাংশনটি কল হয়, এবং যদি রিকোয়েস্ট ফুলফিল হয় তাহলে পরবর্তী কাজগুলো করে। ==> This function is called as soon as the API URL is hit, and if the request is fulfilled, it performs the following actions.
 
@@ -126,7 +126,7 @@
 
 ```
 
-#### Auth hooks
+### Auth hooks
 
 hooks useAuth
 
@@ -147,7 +147,7 @@ hooks useAuth
 
 ```
 
-#### Private & Public Route
+### Private & Public Route
 
 **Private Component**
 
@@ -181,7 +181,7 @@ hooks useAuth
     export default PublicRoute;
 ```
 
-#### Conversation Api Add Pagination & Latest / Revers Conversation
+### Conversation Api Add Pagination & Latest / Revers Conversation
 
 ```sh
     getConversations: builder.query({
