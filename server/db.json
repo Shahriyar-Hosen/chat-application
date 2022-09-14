@@ -7,14 +7,14 @@
       "id": 1
     },
     {
-      "email": "akash@learnwithsumit.com",
-      "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
+      "email": "akash@lws.com",
+      "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
       "name": "Akash Ahmed",
       "id": 2
     },
     {
-      "email": "saad@learnwithsumit.com",
-      "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
+      "email": "saad@lws.com",
+      "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
       "name": "Saad Hasan",
       "id": 3
     },
@@ -26,44 +26,6 @@
     }
   ],
   "conversations": [
-    {
-      "id": 1,
-      "participants": "salman@mail.com-akash@learnwithsumit.com",
-      "users": [
-        {
-          "email": "salman@mail.com",
-          "name": "salman",
-          "id": 1
-        },
-        {
-          "email": "akash@learnwithsumit.com",
-          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
-          "name": "Akash Ahmed",
-          "id": 2
-        }
-      ],
-      "message": "how about you",
-      "timestamp": 1663143710046
-    },
-    {
-      "id": 2,
-      "participants": "salman@mail.com-saad@learnwithsumit.com",
-      "users": [
-        {
-          "email": "salman@mail.com",
-          "name": "salman",
-          "id": 1
-        },
-        {
-          "email": "saad@learnwithsumit.com",
-          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
-          "name": "Saad Hasan",
-          "id": 2
-        }
-      ],
-      "message": "Hi!",
-      "timestamp": 1663142297990
-    },
     {
       "participants": "sal@man.com-salman@mail.com",
       "users": [
@@ -79,33 +41,51 @@
           "id": 1
         }
       ],
-      "message": "hello",
-      "timestamp": 1663143193181,
-      "id": 3
+      "message": "obstar r ki hobe",
+      "timestamp": 1663166291008,
+      "id": 1
     },
     {
-      "participants": "sal@man.com-akash@learnwithsumit.com",
+      "participants": "salman@mail.com-akash@lws.com",
       "users": [
         {
-          "email": "sal@man.com",
-          "name": "sal-man",
-          "id": 4
+          "email": "salman@mail.com",
+          "name": "salman",
+          "id": 1
         },
         {
-          "email": "akash@learnwithsumit.com",
-          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
+          "email": "akash@lws.com",
+          "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
           "name": "Akash Ahmed",
           "id": 2
         }
       ],
-      "message": "whats up broo",
-      "timestamp": 1663144130469,
-      "id": 4
+      "message": "hi",
+      "timestamp": 1663166183104,
+      "id": 2
+    },
+    {
+      "participants": "salman@mail.com-saad@lws.com",
+      "users": [
+        {
+          "email": "salman@mail.com",
+          "name": "salman",
+          "id": 1
+        },
+        {
+          "email": "saad@lws.com",
+          "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
+          "name": "Saad Hasan",
+          "id": 3
+        }
+      ],
+      "message": "how are you",
+      "timestamp": 1663166209217,
+      "id": 3
     }
   ],
   "messages": [
     {
-      "id": 1,
       "conversationId": 1,
       "sender": {
         "email": "salman@mail.com",
@@ -113,28 +93,82 @@
         "id": 1
       },
       "receiver": {
-        "email": "akash@learnwithsumit.com",
-        "name": "Akash Ahmed",
-        "id": 2
+        "email": "sal@man.com",
+        "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
+        "name": "sal-man",
+        "id": 4
       },
-      "message": "Hello",
-      "timestamp": 1661976143557
+      "message": "hello",
+      "timestamp": 1663165557152,
+      "id": 1
     },
     {
-      "id": 2,
-      "conversationId": 1,
+      "conversationId": 2,
       "sender": {
-        "email": "akash@learnwithsumit.com",
-        "name": "Akash Ahmed",
-        "id": 2
-      },
-      "receiver": {
         "email": "salman@mail.com",
         "name": "salman",
         "id": 1
       },
-      "message": "How are you?",
-      "timestamp": 1661976143678
+      "receiver": {
+        "email": "akash@lws.com",
+        "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
+        "name": "Akash Ahmed",
+        "id": 2
+      },
+      "message": "hi",
+      "timestamp": 1663166183104,
+      "id": 2
+    },
+    {
+      "conversationId": 3,
+      "sender": {
+        "email": "salman@mail.com",
+        "name": "salman",
+        "id": 1
+      },
+      "receiver": {
+        "email": "saad@lws.com",
+        "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
+        "name": "Saad Hasan",
+        "id": 3
+      },
+      "message": "how are you",
+      "timestamp": 1663166209217,
+      "id": 3
+    },
+    {
+      "conversationId": 1,
+      "sender": {
+        "email": "salman@mail.com",
+        "name": "salman",
+        "id": 1
+      },
+      "receiver": {
+        "email": "sal@man.com",
+        "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
+        "name": "sal-man",
+        "id": 4
+      },
+      "message": "kire ki obosta",
+      "timestamp": 1663166229417,
+      "id": 4
+    },
+    {
+      "conversationId": 1,
+      "sender": {
+        "email": "sal@man.com",
+        "name": "sal-man",
+        "id": 4
+      },
+      "receiver": {
+        "email": "salman@mail.com",
+        "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
+        "name": "salman",
+        "id": 1
+      },
+      "message": "obstar r ki hobe",
+      "timestamp": 1663166291008,
+      "id": 5
     }
   ]
 }
