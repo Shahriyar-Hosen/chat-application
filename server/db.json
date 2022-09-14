@@ -17,6 +17,12 @@
       "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
       "name": "Saad Hasan",
       "id": 3
+    },
+    {
+      "email": "sal@man.com",
+      "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
+      "name": "sal-man",
+      "id": 4
     }
   ],
   "conversations": [
@@ -31,12 +37,13 @@
         },
         {
           "email": "akash@learnwithsumit.com",
+          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
           "name": "Akash Ahmed",
           "id": 2
         }
       ],
-      "message": "How are you?",
-      "timestamp": 1661976143678
+      "message": "how about you",
+      "timestamp": 1663143710046
     },
     {
       "id": 2,
@@ -48,49 +55,52 @@
           "id": 1
         },
         {
-          "email": "akash@learnwithsumit.com",
+          "email": "saad@learnwithsumit.com",
+          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
           "name": "Saad Hasan",
-          "id": 3
+          "id": 2
         }
       ],
-      "message": "How are you?",
-      "timestamp": 1661976143678
+      "message": "Hi!",
+      "timestamp": 1663142297990
     },
     {
-      "id": 3,
-      "participants": "salman@mail.com-akash@learnwithsumit.com",
+      "participants": "sal@man.com-salman@mail.com",
       "users": [
         {
+          "email": "sal@man.com",
+          "name": "sal-man",
+          "id": 4
+        },
+        {
           "email": "salman@mail.com",
+          "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
           "name": "salman",
           "id": 1
+        }
+      ],
+      "message": "hello",
+      "timestamp": 1663143193181,
+      "id": 3
+    },
+    {
+      "participants": "sal@man.com-akash@learnwithsumit.com",
+      "users": [
+        {
+          "email": "sal@man.com",
+          "name": "sal-man",
+          "id": 4
         },
         {
           "email": "akash@learnwithsumit.com",
+          "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
           "name": "Akash Ahmed",
           "id": 2
         }
       ],
-      "message": "How are you?",
-      "timestamp": 1661976143678
-    },
-    {
-      "id": 4,
-      "participants": "salman@mail.com-saad@learnwithsumit.com",
-      "users": [
-        {
-          "email": "salman@mail.com",
-          "name": "salman",
-          "id": 1
-        },
-        {
-          "email": "akash@learnwithsumit.com",
-          "name": "Saad Hasan",
-          "id": 3
-        }
-      ],
-      "message": "How are you?",
-      "timestamp": 1661976143678
+      "message": "whats up broo",
+      "timestamp": 1663144130469,
+      "id": 4
     }
   ],
   "messages": [
