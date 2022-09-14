@@ -211,3 +211,27 @@ hooks useAuth
     export default isValidEmail;
 
 ```
+
+### Debounce Function
+
+```sh
+  const debounceHandler = (fn, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  };
+
+  const doSearch = (value) => {
+    if (isValidEmail(value)) {
+      // check user API
+      console.log(value);
+      setToValue(value);
+    }
+  };
+
+  const handleSearch = debounceHandler(doSearch, 500);
+```
