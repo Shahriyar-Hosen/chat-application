@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useGetUsersQuery } from "../../features/users/usersApi";
 import isValidEmail from "../../utils/isValidEmail";
+import Error from "../ui/Error";
 
 const Modal = ({ open, control }) => {
   const [to, setTo] = useState("");
   const [message, setMessage] = useState("");
+  const [userCheck, setUserCheck] = useState(false);
+  const { user: loggedInUser } = useSelector((state) => state.auth);
+  const { email: myEmail } = loggedInUser || {};
+
+  const { data: participant } = useGetUsersQuery(to, {
+    skip: !userCheck,
+  });
+
+  useEffect(() => {
+    if (participant?.length > 0 && participant[0]?.email === myEmail) {
+      // check conversation existence
+    
+    }
+  }, [participant, myEmail]);
 
   const debounceHandler = (fn, delay) => {
     let timeoutId;
@@ -18,8 +35,8 @@ const Modal = ({ open, control }) => {
   const doSearch = (value) => {
     if (isValidEmail(value)) {
       // check user API
-      console.log(value);
       setTo(value);
+      setUserCheck(true);
     }
   };
 
@@ -78,7 +95,12 @@ const Modal = ({ open, control }) => {
               </button>
             </div>
 
-            {/* <Error message="There was an error" /> */}
+            {participant?.length === 0 && (
+              <Error message="This is user dose not exist!" />
+            )}
+            {participant?.length > 0 && participant[0]?.email === myEmail && (
+              <Error message="You can not send message to yourself!" />
+            )}
           </form>
         </div>
       </>

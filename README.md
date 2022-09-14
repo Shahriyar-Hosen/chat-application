@@ -235,3 +235,17 @@ hooks useAuth
 
   const handleSearch = debounceHandler(doSearch, 500);
 ```
+
+### Skip initial call getQuery API
+
+```sh
+  const [userCheck, setUserCheck] = useState(false);
+
+  const { data: participant } = useGetUsersQuery(to, {
+    skip: !userCheck,
+  });
+
+  const handleSubmit = () => {
+      setUserCheck(true);
+    };
+```
