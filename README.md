@@ -194,3 +194,58 @@ hooks useAuth
             `/conversations?participants_like=${email}&_sort=timestamp&_order=desc&_page=1&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}`,
     }),
 ```
+
+### Valid Email Checker
+
+```sh
+    // Valid Email Checker
+
+    const isValidEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    };
+
+    export default isValidEmail;
+
+```
+
+### Debounce Function
+
+```sh
+  const debounceHandler = (fn, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  };
+
+  const doSearch = (value) => {
+    if (isValidEmail(value)) {
+      // check user API
+      console.log(value);
+      setToValue(value);
+    }
+  };
+
+  const handleSearch = debounceHandler(doSearch, 500);
+```
+
+### Skip initial call getQuery API
+
+```sh
+  const [userCheck, setUserCheck] = useState(false);
+
+  const { data: participant } = useGetUsersQuery(to, {
+    skip: !userCheck,
+  });
+
+  const handleSubmit = () => {
+      setUserCheck(true);
+    };
+```
