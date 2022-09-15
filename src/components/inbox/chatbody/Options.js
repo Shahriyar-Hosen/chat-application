@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useEditConversationMutation } from "../../../features/conversation/conversationApi";
 
-const Options = () => {
-  const [messages, setMessages] = useState("");
-  const [editConversation, { isSuccess: isEditConversationSuccess }] =
-    useEditConversationMutation();
+const Options = ({ message: info }) => {
+  const [message, setMessage] = useState("");
+
+  const [editConversation, { isSuccess }] = useEditConversationMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setMessage("");
+    }
+  }, [isSuccess]);
+
+  const { user: loggedInUser } = useSelector((state) => state.auth);
+
+  const participantUser =
+    info.receiver.email !== loggedInUser.email ? info.receiver : info.sender;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // edit conversation
+    editConversation({
+      id: info?.conversationId,
+      sender: loggedInUser?.email,
+      data: {
+        participants: `${loggedInUser.email}-${participantUser.email}`,
+        users: [loggedInUser, participantUser],
+        message,
+        timestamp: new Date().getTime(),
+      },
+    });
   };
 
   return (
@@ -21,8 +44,8 @@ const Options = () => {
         className="block w-full py-2 pl-4 mx-3 bg-gray-100 focus:ring focus:ring-violet-500 rounded-full outline-none focus:text-gray-700"
         name="message"
         required
-        value={messages}
-        onChange={(e) => setMessages(e.target.value)}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
       />
       <button type="submit">
         <svg

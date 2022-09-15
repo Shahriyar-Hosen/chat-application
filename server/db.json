@@ -33,22 +33,21 @@
   ],
   "conversations": [
     {
-      "participants": "sal@man.com-salman@mail.com",
+      "participants": "salman@mail.com-sal@man.com",
       "users": [
+        {
+          "email": "salman@mail.com",
+          "name": "salman",
+          "id": 1
+        },
         {
           "email": "sal@man.com",
           "name": "sal-man",
           "id": 4
-        },
-        {
-          "email": "salman@mail.com",
-          "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
-          "name": "salman",
-          "id": 1
         }
       ],
-      "message": "obstar r ki hobe",
-      "timestamp": 1663166291008,
+      "message": "hi2",
+      "timestamp": 1663208780267,
       "id": 1
     },
     {
@@ -211,6 +210,38 @@
       "message": "hlw vi",
       "timestamp": 1663205095912,
       "id": 6
+    },
+    {
+      "conversationId": 1,
+      "sender": {
+        "email": "salman@mail.com",
+        "name": "salman",
+        "id": 1
+      },
+      "receiver": {
+        "email": "sal@man.com",
+        "name": "sal-man",
+        "id": 4
+      },
+      "message": "hi",
+      "timestamp": 1663208690995,
+      "id": 7
+    },
+    {
+      "conversationId": 1,
+      "sender": {
+        "email": "salman@mail.com",
+        "name": "salman",
+        "id": 1
+      },
+      "receiver": {
+        "email": "sal@man.com",
+        "name": "sal-man",
+        "id": 4
+      },
+      "message": "hi2",
+      "timestamp": 1663208780267,
+      "id": 8
     }
   ]
 }
