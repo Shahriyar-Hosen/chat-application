@@ -23,6 +23,12 @@
       "password": "$2a$10$pwO4Y6uKabsXTZ7HgPptduecW4nIjEb8/oDd2225hYTTVVLG8EGqC",
       "name": "sal-man",
       "id": 4
+    },
+    {
+      "email": "sumit@learnwithsumit.com",
+      "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
+      "name": "Sumit Saha",
+      "id": 5
     }
   ],
   "conversations": [
@@ -82,6 +88,25 @@
       "message": "how are you",
       "timestamp": 1663166209217,
       "id": 3
+    },
+    {
+      "participants": "salman@mail.com-sumit@learnwithsumit.com",
+      "users": [
+        {
+          "email": "salman@mail.com",
+          "name": "salman",
+          "id": 1
+        },
+        {
+          "email": "sumit@learnwithsumit.com",
+          "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
+          "name": "Sumit Saha",
+          "id": 5
+        }
+      ],
+      "message": "hlw vi",
+      "timestamp": 1663205095912,
+      "id": 4
     }
   ],
   "messages": [
@@ -169,6 +194,23 @@
       "message": "obstar r ki hobe",
       "timestamp": 1663166291008,
       "id": 5
+    },
+    {
+      "conversationId": 4,
+      "sender": {
+        "email": "salman@mail.com",
+        "name": "salman",
+        "id": 1
+      },
+      "receiver": {
+        "email": "sumit@learnwithsumit.com",
+        "password": "$2a$10$YM5KurAkJ2MTD.mlgKSeEO6hrzElCEeQ3iFMcTB4mjY7uO24n5JHq",
+        "name": "Sumit Saha",
+        "id": 5
+      },
+      "message": "hlw vi",
+      "timestamp": 1663205095912,
+      "id": 6
     }
   ]
 }
