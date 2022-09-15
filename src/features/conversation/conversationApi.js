@@ -17,23 +17,36 @@ export const conversationApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        const conversation = await queryFulfilled;
-        if (conversation?.data?.id) {
-          // silent entry to message table
-          const users = arg.data.users;
-          const senderUser = users.find((user) => user.email === arg.sender);
-          const receiverUser = users.find((user) => user.email !== arg.sender);
+      async onQueryStarted({ data, sender }, { queryFulfilled, dispatch }) {
+        // optimistic cache update start
+        const pathResultAdd = dispatch(
+          apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
+            draft.push(data);
+          })
+        );
 
-          dispatch(
-            messagesApi.endpoints.addMessage.initiate({
-              conversationId: conversation?.data?.id,
-              sender: senderUser,
-              receiver: receiverUser,
-              message: arg.data.message,
-              timestamp: arg.data.timestamp,
-            })
-          );
+        // optimistic cache update end
+        try {
+          const conversation = await queryFulfilled;
+          if (conversation?.data?.id) {
+            // silent entry to message table
+
+            const { users, message, timestamp } = data || {};
+            const senderUser = users.find((user) => user.email === sender);
+            const receiverUser = users.find((user) => user.email !== sender);
+
+            dispatch(
+              messagesApi.endpoints.addMessage.initiate({
+                conversationId: conversation?.data?.id,
+                sender: senderUser,
+                receiver: receiverUser,
+                message: message,
+                timestamp: timestamp,
+              })
+            );
+          }
+        } catch (err) {
+          pathResultAdd.undo();
         }
       },
     }),
@@ -43,23 +56,39 @@ export const conversationApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        const conversation = await queryFulfilled;
-        if (conversation?.data?.id) {
-          // silent entry to message table
-          const users = arg.data.users;
-          const senderUser = users.find((user) => user.email === arg.sender);
-          const receiverUser = users.find((user) => user.email !== arg.sender);
+      async onQueryStarted({ id, data, sender }, { queryFulfilled, dispatch }) {
+        // optimistic cache update start
+        const pathResultEdit = dispatch(
+          apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
+            const draftConversation = draft.find((c) => c.id == id);
+            draftConversation.message = data?.message;
+            draftConversation.timestamp = data?.timestamp;
+          })
+        );
 
-          dispatch(
-            messagesApi.endpoints.addMessage.initiate({
-              conversationId: conversation?.data?.id,
-              sender: senderUser,
-              receiver: receiverUser,
-              message: arg.data.message,
-              timestamp: arg.data.timestamp,
-            })
-          );
+        // optimistic cache update end
+
+        try {
+          const conversation = await queryFulfilled;
+          if (conversation?.data?.id) {
+            // silent entry to message table
+            const { users, message, timestamp } = data || {};
+
+            const senderUser = users.find((user) => user.email === sender);
+            const receiverUser = users.find((user) => user.email !== sender);
+
+            dispatch(
+              messagesApi.endpoints.addMessage.initiate({
+                conversationId: conversation?.data?.id,
+                sender: senderUser,
+                receiver: receiverUser,
+                message: message,
+                timestamp: timestamp,
+              })
+            );
+          }
+        } catch (err) {
+          pathResultEdit.undo();
         }
       },
     }),
