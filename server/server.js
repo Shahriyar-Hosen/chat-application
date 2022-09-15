@@ -26,6 +26,7 @@ router.render = (req, res) => {
     });
   }
 
+  
   if (path.includes("/messages") && method === "POST") {
     // emit socket
     io.emit("message", {
