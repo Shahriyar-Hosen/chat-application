@@ -5,6 +5,9 @@ const http = require("http");
 
 const app = express();
 const server = http.createServer(app);
+const io = require("socket.io")(server);
+
+global.io = io;
 
 const router = jsonServer.router("db.json");
 const middlewares = jsonServer.defaults();
