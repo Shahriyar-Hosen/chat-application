@@ -18,23 +18,35 @@ export const conversationApi = apiSlice.injectEndpoints({
         body: data,
       }),
       async onQueryStarted({ data, sender }, { queryFulfilled, dispatch }) {
-        const conversation = await queryFulfilled;
-        if (conversation?.data?.id) {
-          // silent entry to message table
+        // optimistic cache update start
+        const pathResultAdd = dispatch(
+          apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
+            draft.push(data);
+          })
+        );
 
-          const { users, message, timestamp } = data || {};
-          const senderUser = users.find((user) => user.email === sender);
-          const receiverUser = users.find((user) => user.email !== sender);
+        // optimistic cache update end
+        try {
+          const conversation = await queryFulfilled;
+          if (conversation?.data?.id) {
+            // silent entry to message table
 
-          dispatch(
-            messagesApi.endpoints.addMessage.initiate({
-              conversationId: conversation?.data?.id,
-              sender: senderUser,
-              receiver: receiverUser,
-              message: message,
-              timestamp: timestamp,
-            })
-          );
+            const { users, message, timestamp } = data || {};
+            const senderUser = users.find((user) => user.email === sender);
+            const receiverUser = users.find((user) => user.email !== sender);
+
+            dispatch(
+              messagesApi.endpoints.addMessage.initiate({
+                conversationId: conversation?.data?.id,
+                sender: senderUser,
+                receiver: receiverUser,
+                message: message,
+                timestamp: timestamp,
+              })
+            );
+          }
+        } catch (err) {
+          pathResultAdd.undo();
         }
       },
     }),
@@ -46,13 +58,14 @@ export const conversationApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted({ id, data, sender }, { queryFulfilled, dispatch }) {
         // optimistic cache update start
-        const pathResult1 = dispatch(
+        const pathResultEdit = dispatch(
           apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
             const draftConversation = draft.find((c) => c.id == id);
             draftConversation.message = data?.message;
             draftConversation.timestamp = data?.timestamp;
           })
         );
+
         // optimistic cache update end
 
         try {
@@ -75,7 +88,7 @@ export const conversationApi = apiSlice.injectEndpoints({
             );
           }
         } catch (err) {
-          pathResult1.undo();
+          pathResultEdit.undo();
         }
       },
     }),
