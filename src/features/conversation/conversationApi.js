@@ -44,6 +44,31 @@ export const conversationApi = apiSlice.injectEndpoints({
         socket.close();
       },
     }),
+    getMoreConversations: builder.query({
+      query: ({ email, page }) =>
+        `/conversations?participants_like=${email}&_sort=timestamp&_order=desc&_page=${page}&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}`,
+
+      async onQueryStarted({ email }, { queryFulfilled, dispatch }) {
+        try {
+          const conversations = await queryFulfilled;
+          if (conversations?.length > 0) {
+            // update conversation cache pessimistically start
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getMoreConversations",
+                email,
+                (draft) => {
+                  return [...draft, ...conversations];
+                }
+              )
+            );
+            // update conversation cache pessimistically start
+          }
+        } catch (err) {
+          // do nothing
+        }
+      },
+    }),
     getConversation: builder.query({
       query: ({ userEmail, participantEmail }) =>
         `/conversations?participants_like=${userEmail}-${participantEmail}&&participants_like=${participantEmail}-${userEmail}`,
@@ -114,7 +139,8 @@ export const conversationApi = apiSlice.injectEndpoints({
             const senderUser = users.find((user) => user.email === sender);
             const receiverUser = users.find((user) => user.email !== sender);
 
-            const res = await dispatch(
+            // const res =
+            await dispatch(
               messagesApi.endpoints.addMessage.initiate({
                 conversationId: conversation?.data?.id,
                 sender: senderUser,
