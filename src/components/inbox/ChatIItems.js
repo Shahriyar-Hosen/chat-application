@@ -1,7 +1,10 @@
 import ChatItem from "./ChatItem";
-import React from "react";
-import { useSelector } from "react-redux";
-import { useGetConversationsQuery } from "../../features/conversation/conversationApi";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  conversationApi,
+  useGetConversationsQuery,
+} from "../../features/conversation/conversationApi";
 import Error from "../ui/Error";
 import { Link } from "react-router-dom";
 import gravatarUrl from "gravatar-url";
@@ -12,12 +15,37 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const ChatIItems = () => {
   const { user } = useSelector((state) => state.auth) || {};
   const { email } = user || {};
-  const {
-    data: conversations,
-    isLoading,
-    isError,
-    error,
-  } = useGetConversationsQuery(email);
+  const { data, isLoading, isError, error } =
+    useGetConversationsQuery(email) || {};
+
+  const { data: conversations, totalCount } = data || {};
+  
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const dispatch = useDispatch();
+
+  const fetchMore = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  useEffect(() => {
+    if (page > 1) {
+      dispatch(
+        conversationApi.endpoints.getMoreConversations.initiate({ email, page })
+      );
+    }
+  }, [page, email, dispatch]);
+
+  useEffect(() => {
+    if (totalCount > 0) {
+      const more =
+        Math.ceil(
+          totalCount / Number(process.env.REACT_APP_CONVERSATIONS_PER_PAGE)
+        ) > page;
+
+      setHasMore(more);
+    }
+  }, [totalCount, page]);
 
   // decide what to render
   let content = null;
@@ -36,8 +64,8 @@ const ChatIItems = () => {
     content = (
       <InfiniteScroll
         dataLength={conversations.length}
-        next={() => console.log("fetchData")}
-        hasMore={true}
+        next={fetchMore}
+        hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         height={window.innerHeight - 129}
       >

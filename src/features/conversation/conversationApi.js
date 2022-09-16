@@ -8,6 +8,14 @@ export const conversationApi = apiSlice.injectEndpoints({
       query: (email) =>
         `/conversations?participants_like=${email}&_sort=timestamp&_order=desc&_page=1&_limit=${process.env.REACT_APP_CONVERSATIONS_PER_PAGE}`,
 
+      transformResponse(apiResponse, meta) {
+        const totalCount = meta.response.headers.get("X-Total-Count");
+        return {
+          data: apiResponse,
+          totalCount,
+        };
+      },
+
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -51,14 +59,20 @@ export const conversationApi = apiSlice.injectEndpoints({
       async onQueryStarted({ email }, { queryFulfilled, dispatch }) {
         try {
           const conversations = await queryFulfilled;
-          if (conversations?.length > 0) {
+          if (conversations?.data?.length > 0) {
             // update conversation cache pessimistically start
             dispatch(
               apiSlice.util.updateQueryData(
-                "getMoreConversations",
+                "getConversations",
                 email,
                 (draft) => {
-                  return [...draft, ...conversations];
+                  return {
+                    data: [
+                      ...draft.data, 
+                      ...conversations.data
+                    ],
+                    totalCount: Number(draft.totalCount),
+                  };
                 }
               )
             );
@@ -118,11 +132,13 @@ export const conversationApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
+
       async onQueryStarted({ id, data, sender }, { queryFulfilled, dispatch }) {
         // optimistic cache update start
         const pathResultEdit = dispatch(
           apiSlice.util.updateQueryData("getConversations", sender, (draft) => {
-            const draftConversation = draft.find((c) => c.id == id);
+            const draftConversation = draft.data.find((c) => c.id == id);
+
             draftConversation.message = data?.message;
             draftConversation.timestamp = data?.timestamp;
           })
@@ -171,6 +187,7 @@ export const conversationApi = apiSlice.injectEndpoints({
 
 export const {
   useGetConversationsQuery,
+  useGetMoreConversationsQuery,
   useGetConversationQuery,
   useAddConversationMutation,
   useEditConversationMutation,
