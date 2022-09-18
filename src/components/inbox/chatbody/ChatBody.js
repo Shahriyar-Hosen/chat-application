@@ -9,27 +9,33 @@ import Error from "../../ui/Error";
 
 const ChatBody = () => {
   const { id } = useParams();
-  const { data: messages, isLoading, isError, error } = useGetMessagesQuery(id);
+  const { data, isLoading, isError, error } = useGetMessagesQuery(id) || {};
+  const { data: messages, totalMessage } = data || {};
+
+  const myMessages = messages?.filter(
+    (message) => message.conversationId === Number(id)
+  );
 
   // decide what to render
   let content = null;
 
   if (isLoading) {
-    content = <div>Loading...</div>;
+    content = <div className="m-2 text-center">Loading...</div>;
   } else if (!isLoading && isError) {
     content = (
-      <div>
+      <div className="m-2 text-center">
         <Error message={error?.data} />
       </div>
     );
-  } else if (!isLoading && !isError && messages?.length === 0) {
-    content = <div>No messages found!</div>;
-  } else if (!isLoading && !isError && messages?.length > 0) {
+  } else if (!isLoading && !isError && myMessages?.length === 0) {
+    content = <div className="m-2 text-center">No messages found!</div>;
+    
+  } else if (!isLoading && !isError && myMessages?.length > 0) {
     content = (
       <>
-        <ChatHead message={messages[0]} />
-        <Messages messages={messages} />
-        <Options message={messages[0]} />
+        <ChatHead message={myMessages[0]} />
+        <Messages messages={myMessages} totalMessage={totalMessage} />
+        <Options messageInfo={myMessages[0]} />
       </>
     );
   }
