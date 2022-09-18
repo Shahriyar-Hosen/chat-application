@@ -5,17 +5,25 @@ export const messagesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: (id) =>
-        `/messages?conversationId_like=${id}&_sort=timestamp&_order=desc&_page=1&_limit=${process.env.REACT_APP_MESSAGES_PER_PAGE}`,
+        `/messages?conversationId=${id}&_sort=timestamp&_order=desc&_page=1&_limit=${process.env.REACT_APP_MESSAGES_PER_PAGE}`,
 
+      transformResponse(apiResponse, meta) {
+        const totalMessage = meta.response.headers.get("X-Total-Count");
+
+        return {
+          data: apiResponse,
+          totalMessage: Number(totalMessage),
+        };
+      },
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         // create socket
-        const socket = io("http://localhost:9000/", {
+        const socket = io("http://localhost:9000", {
           reconnectionDelay: 1000,
           reconnection: true,
-          reconnectionAttemps: 10,
+          reconnectionAttempts: 10,
           transports: ["websocket"],
           agent: false,
           upgrade: false,
@@ -24,25 +32,42 @@ export const messagesApi = apiSlice.injectEndpoints({
 
         try {
           await cacheDataLoaded;
-          socket.on("message", (data) => {
-            
-            updateCachedData((draft) => {
-              const messages = draft.find(
-                (c) => c.conversationId == data?.data?.conversationId
-              );
 
-              if (messages?.id) {
-                draft.push(data?.data);
-              } else {
-                // do nothing
-              }
+          socket.on("message", ({ data }) => {
+            updateCachedData((draft) => {
+              draft.data.unshift(data);
             });
           });
         } catch (err) {
           // err there
         }
+
         await cacheEntryRemoved;
         socket.close();
+      },
+    }),
+    getMoreMessages: builder.query({
+      query: ({ id, page }) =>
+        `/messages?conversationId=${id}&_sort=timestamp&_order=desc&_page=${page}&_limit=${process.env.REACT_APP_MESSAGES_PER_PAGE}`,
+      async onQueryStarted({ id }, { queryFulfilled, dispatch }) {
+        try {
+          const { data: resData } = (await queryFulfilled) || {};
+
+          if (resData?.length > 0) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getMessages",
+                id.toString(),
+                (draft) => {
+                  return {
+                    data: [...draft.data, ...resData],
+                    totalMessage: Number(draft.totalMessage),
+                  };
+                }
+              )
+            );
+          }
+        } catch (err) {}
       },
     }),
     addMessage: builder.mutation({

@@ -15,11 +15,17 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const ChatIItems = () => {
   const { user } = useSelector((state) => state.auth) || {};
   const { email } = user || {};
+
   const { data, isLoading, isError, error } =
     useGetConversationsQuery(email) || {};
 
   const { data: conversations, totalCount } = data || {};
-  
+
+  const myConversations = conversations?.filter((conversation) =>
+    conversation.participants.includes(email)
+  );
+
+  // local states
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useDispatch();
@@ -31,7 +37,10 @@ const ChatIItems = () => {
   useEffect(() => {
     if (page > 1) {
       dispatch(
-        conversationApi.endpoints.getMoreConversations.initiate({ email, page })
+        conversationApi.endpoints.getMoreConversations.initiate({
+          email,
+          page,
+        })
       );
     }
   }, [page, email, dispatch]);
@@ -58,27 +67,24 @@ const ChatIItems = () => {
         <Error message={error?.data} />
       </li>
     );
-  } else if (!isLoading && !isError && conversations?.length === 0) {
-    content = <li className="m-2 text-center">No conversations found!</li>;
-  } else if (!isLoading && !isError && conversations?.length > 0) {
+  } else if (!isLoading && !isError && myConversations?.length === 0) {
+    content = <li className="m-2 text-center">No Conversation Found</li>;
+  } else if (!isLoading && !isError && myConversations?.length > 0) {
     content = (
       <InfiniteScroll
-        dataLength={conversations.length}
+        dataLength={myConversations?.length}
         next={fetchMore}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
+        loader={<h4 className=" text-center py-1">Loading...</h4>}
         height={window.innerHeight - 129}
       >
-        {conversations.map((conversation) => {
-          const { id, message, timestamp } = conversation;
-          const { email } = user || {};
-          const { name, email: partnerEmail } = getPartnerInfo(
-            conversation?.users,
-            email
-          );
+        {myConversations.map((conversation) => {
+          const { id, users, message, timestamp } = conversation || {};
+
+          const { email: partnerEmail, name } = getPartnerInfo(users, email);
 
           return (
-            <li key={id}>
+            <li key={conversation.id}>
               <Link to={`/inbox/${id}`}>
                 <ChatItem
                   avatar={gravatarUrl(partnerEmail, {
@@ -86,6 +92,7 @@ const ChatIItems = () => {
                   })}
                   name={name}
                   lastMessage={message}
+                  id={id}
                   lastTime={moment(timestamp).fromNow()}
                 />
               </Link>

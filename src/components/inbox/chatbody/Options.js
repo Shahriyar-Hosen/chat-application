@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useEditConversationMutation } from "../../../features/conversation/conversationApi";
 
-const Options = ({ message: info }) => {
+const Options = ({ messageInfo }) => {
   const [message, setMessage] = useState("");
-
   const [editConversation, { isSuccess }] = useEditConversationMutation();
+  const { user } = useSelector((state) => state.auth) || {};
 
   useEffect(() => {
     if (isSuccess) {
@@ -13,20 +13,16 @@ const Options = ({ message: info }) => {
     }
   }, [isSuccess]);
 
-  const { user: loggedInUser } = useSelector((state) => state.auth);
-
-  const participantUser =
-    info.receiver.email !== loggedInUser.email ? info.receiver : info.sender;
+  const { email } = user || {};
+  const { conversationId } = messageInfo;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // edit conversation
     editConversation({
-      id: info?.conversationId,
-      sender: loggedInUser?.email,
+      id: conversationId,
+      sender: email,
       data: {
-        participants: `${loggedInUser.email}-${participantUser.email}`,
-        users: [loggedInUser, participantUser],
         message,
         timestamp: new Date().getTime(),
       },
