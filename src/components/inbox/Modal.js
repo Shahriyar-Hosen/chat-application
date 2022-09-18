@@ -12,64 +12,71 @@ import Error from "../ui/Error";
 const Modal = ({ open, control }) => {
   const [to, setTo] = useState("");
   const [message, setMessage] = useState("");
-  const [userCheck, setUserCheck] = useState(false);
+  const [requestSkip, setRequestSkip] = useState(false);
+  const [resErr, setResErr] = useState(false);
   const [conversation, setConversation] = useState(undefined);
-  const [responseError, setResponseError] = useState("");
+
+  const { user: loggedInUser } = useSelector((state) => state.auth) || {};
+  const { email: myEmail } = loggedInUser || {};
   const dispatch = useDispatch();
 
-  const { user: loggedInUser } = useSelector((state) => state.auth);
-  const { email: myEmail } = loggedInUser || {};
-
   const { data: participant } = useGetUsersQuery(to, {
-    skip: !userCheck,
+    refetchOnMountOrArgChange: true,
+    skip: !requestSkip,
   });
-
-  const [addConversation, { isSuccess: isAddConversationSuccess }] =
+  const [addConversation, { isSuccess: addConversationSuccess }] =
     useAddConversationMutation();
-  const [editConversation, { isSuccess: isEditConversationSuccess }] =
+  const [editConversation, { isSuccess: editConversationSuccess }] =
     useEditConversationMutation();
 
   useEffect(() => {
-    if (participant?.length > 0 && participant[0]?.email !== myEmail) {
-      // check conversation existence
+    if (participant?.length > 0 && participant[0].email !== myEmail) {
       dispatch(
-        conversationApi.endpoints.getConversation.initiate({
-          userEmail: myEmail,
-          participantEmail: to,
-        })
+        conversationApi.endpoints.getConversation.initiate(
+          {
+            userEmail: myEmail,
+            participantEmail: to,
+          },
+          { forceRefetch: true }
+        )
       )
         .unwrap()
         .then((data) => {
           setConversation(data);
         })
-        .catch((err) => {
-          setResponseError("There was a problem!");
-        });
+        .catch((err) => setResErr("There is something wrong!"));
     }
-  }, [participant, myEmail, dispatch, to]);
+  }, [
+    dispatch,
+    myEmail,
+    participant,
+    to,
+    addConversationSuccess,
+    editConversationSuccess,
+  ]);
 
   useEffect(() => {
-    if (isAddConversationSuccess || isEditConversationSuccess) {
+    if (addConversationSuccess || editConversationSuccess) {
       control();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAddConversationSuccess, isEditConversationSuccess]);
+  }, [addConversationSuccess, editConversationSuccess]);
 
   const debounceHandler = (fn, delay) => {
     let timeoutId;
-    return (...args) => {
+    return (...arg) => {
       clearTimeout(timeoutId);
+
       timeoutId = setTimeout(() => {
-        fn(...args);
+        fn(...arg);
       }, delay);
     };
   };
 
   const doSearch = (value) => {
     if (isValidEmail(value)) {
-      // check user API
       setTo(value);
-      setUserCheck(true);
+      setRequestSkip(true);
     }
   };
 
@@ -77,6 +84,7 @@ const Modal = ({ open, control }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage("");
 
     if (conversation?.length > 0) {
       // edit conversation
@@ -84,8 +92,6 @@ const Modal = ({ open, control }) => {
         id: conversation[0].id,
         sender: myEmail,
         data: {
-          participants: `${myEmail}-${participant[0].email}`,
-          users: [loggedInUser, participant[0]],
           message,
           timestamp: new Date().getTime(),
         },
@@ -167,7 +173,7 @@ const Modal = ({ open, control }) => {
             {participant?.length > 0 && participant[0]?.email === myEmail && (
               <Error message="You can not send message to yourself!" />
             )}
-            {responseError && <Error message={responseError} />}
+            {resErr && <Error message={resErr} />}
           </form>
         </div>
       </>
